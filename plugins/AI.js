@@ -38,8 +38,7 @@ ig.module('plugins.AI')
       **/
       currentState: 0,
 
-      currentPos:0,
-      currentThreshold:0,
+      stateList: [],
 
       /**
        * Set initial values here. Init is called automatically when the class is instantiated.
@@ -50,10 +49,9 @@ ig.module('plugins.AI')
        * @param {int} currentThreshold The current threshold to meet to invoke the next think() call.
        * @constructor
        **/
-      init: function(currentPos, currentThreshold )
+      init: function()
       {
-        this.currentPos = currentPos;
-        this.currentThreshold = currentThreshold;
+
       },
 
       /**
@@ -63,25 +61,34 @@ ig.module('plugins.AI')
       **/ 
       addState: function(state)
       {
-
+        if( this.stateList[state] != null )
+        {
+          this.stateList[state] = 1;
+          this.stateList[state][0] = [];
+        }
       },
 
-      addAction: function()
+      addAction: function(state, method)
       {
-
+        //the state exists!
+        if(this.stateList[state] >= 1)
+        {
+          this.stateList[state][0].push( method )
+        }
       },
 
       update: function()
       {
         if( this.currentPos >= this.currentThreshold )
         {
-
+          this.think();
         }
       },
 
       think:function()
       {
-
+          //choose random method from actions.
+          //this.stateList[state][0]
       }
     })
 });
