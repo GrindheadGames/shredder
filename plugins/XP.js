@@ -26,7 +26,6 @@
 * OTHER DEALINGS IN THE SOFTWARE.
 */
 
-
 ig.module('plugins.XP')
 .requires()
 .defines(function () {
@@ -47,13 +46,12 @@ ig.module('plugins.XP')
       levelUpXPThreshold:0,
 
       /**
-      * Percentage increase of XP needed to level up. IE, .05 would increase levelUpXPThreshold up by 5%
+      * Percentage increase of XP needed to level up. IE, 1.05 would increase levelUpXPThreshold up by 5%
       * @property levelUpXPThresholdIncrease
       * @type float
       **/ 
       levelUpXPThresholdIncrease:0,
 
-    
       /**
       * Current level of the obj.
       * @property currentLevel
@@ -83,7 +81,7 @@ ig.module('plugins.XP')
        * @param {int} currentXP The current XP of the object
        * @param {int} currentLevel The current Level of the object
        * @param {int} maxLevel The max permitted Level of the object
-       * @param {int} levelUpXPThresholdIncrease The percentage increase of XP needed to level up. IE, .05 would increase XP needed to level up by 5% - note, we may change this be reference a method instead.
+       * @param {int} levelUpXPThresholdIncrease The percentage increase of XP needed to level up. IE, 1.05 would increase XP needed to level up by 5% - note, we may change this be reference a method instead.
        * @param {int} levelUpXPThreshold The amount of currentXP needed to increase the currentLevel
        * @param {int} levelUpCallback (optional) a callback method to call when the obj levels up.
        *
