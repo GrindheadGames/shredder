@@ -7,6 +7,15 @@ ig.module('plugins.draggableEntity')
 		clickKey: '',
 		realXPos:0,
 		realYPos:0,
+		image: null,
+
+		init:function(x,y,settings)
+		{
+			this.parent(x,y,settings);
+
+			this.realXPos = this.pos.x- (this.size.x >> 1);
+			this.realYPos = this.pos.y- (this.size.y >> 1);
+		},
 
 		update: function()
 		{
