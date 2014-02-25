@@ -29,19 +29,17 @@
 /**
  * @int seed A value used to seed randomness. Values between 1 - n
  */
-var RandomSequence = function(seed) {
+function createRandomSequence(seed) {
 
-  this.seed = seed
-
-  var currentSeed = null
-
-  this.get = function() {
-    currentSeed = logisticMap(currentSeed)
-    return currentSeed
-  }
+  var self =
+      { currentSeed: seed ? '0.' + seed : Math.random()
+      , get: function() {
+          return self.currentSeed = logisticMap(self.currentSeed)
+        }
+      }
 
   /**
-   * Randomness is achieved by iteration using the logistic map.
+   * Randomness is achieved by recursion over the logistic map.
    *
    * http://en.wikipedia.org/wiki/Logistic_map#Chaos_and_the_logistic_map
    */
@@ -52,14 +50,14 @@ var RandomSequence = function(seed) {
   /**
    * The logistic map's randomness is evident after a number of iterations.
    */
-  function primeChaos() {
-    currentSeed = '0.' + seed
-
-    // 100 iterations will provide adequate randomness
-    for (var i = 0; i < 100; i++) {
-      currentSeed = logisticMap(currentSeed)
+  function init() {
+    // 99 iterations will provide adequate randomness.
+    for (var i = 0; i < 99; i++) {
+      self.currentSeed = logisticMap(self.currentSeed)
     }
+
+    return self
   }
 
-  primeChaos()
+  return init()
 }
