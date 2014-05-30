@@ -13,7 +13,7 @@
     }
 
   if (typeof ig !== 'undefined') {
-    // Impact.js:
+    // Impact.js
     ig.module('plugins.DrawingUtils').requires('impact.system').defines(function () {
       ig.System.inject(drawingData)
     })
@@ -24,4 +24,4 @@
     // Script tag
     root.drawingData = drawingData
   }
-}(root))
+}(this))

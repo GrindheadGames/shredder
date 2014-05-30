@@ -91,7 +91,7 @@
     }
 
   if (typeof ig !== 'undefined') {
-    // Impact.js:
+    // Impact.js
     ig.module('plugins.AI').requires().defines(function () {
       AI = ig.Class.extend({}, ai)
     })
@@ -102,4 +102,4 @@
     // Script tag
     root.ai = ai
   }
-}(root))
+}(this))
