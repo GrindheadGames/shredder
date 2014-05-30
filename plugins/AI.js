@@ -26,69 +26,78 @@
 * OTHER DEALINGS IN THE SOFTWARE.
 */
 
-ig.module('plugins.AI')
-.requires()
-.defines(function () {
-    AI = ig.Class.extend({}
+var ai = {
 
-      /**
-      * The current state of the AI.
-      * @property currentState
-      * @type int
-      **/
-      currentState: 0,
+    /**
+    * The current state of the AI.
+    * @property currentState
+    * @type int
+    **/
+    currentState: 0,
 
-      stateList: [],
+    stateList: [],
 
-      /**
-       * Set initial values here. Init is called automatically when the class is instantiated.
-       * If you load any saved details, make sure you set them in the constructor. 
-       * 
-       * @class AI
-       * @param {int} currentPos The current postion of the CTR to invoke the next think() call.
-       * @param {int} currentThreshold The current threshold to meet to invoke the next think() call.
-       * @constructor
-       **/
-      init: function()
+    /**
+     * Set initial values here. Init is called automatically when the class is instantiated.
+     * If you load any saved details, make sure you set them in the constructor.
+     *
+     * @class AI
+     * @param {int} currentPos The current postion of the CTR to invoke the next think() call.
+     * @param {int} currentThreshold The current threshold to meet to invoke the next think() call.
+     * @constructor
+     **/
+    init: function()
+    {
+
+    },
+
+    /**
+    * increase the XP of the obj. Automatically handles levelling up.
+    * @method increaseXP
+    * @param {int} amt The amount of XP to add.
+    **/
+    addState: function(state)
+    {
+      if( this.stateList[state] != null )
       {
-
-      },
-
-      /**
-      * increase the XP of the obj. Automatically handles levelling up.
-      * @method increaseXP
-      * @param {int} amt The amount of XP to add.
-      **/ 
-      addState: function(state)
-      {
-        if( this.stateList[state] != null )
-        {
-          this.stateList[state] = 1;
-          this.stateList[state][0] = [];
-        }
-      },
-
-      addAction: function(state, method)
-      {
-        //the state exists!
-        if(this.stateList[state] >= 1)
-        {
-          this.stateList[state][0].push( method )
-        }
-      },
-
-      update: function()
-      {
-        if( this.currentPos >= this.currentThreshold )
-        {
-          this.think();
-        }
-      },
-
-      think:function()
-      {
-          //choose random method from actions.
-          //this.stateList[state][0]
+        this.stateList[state] = 1;
+        this.stateList[state][0] = [];
       }
-    })
-});
+    },
+
+    addAction: function(state, method)
+    {
+      //the state exists!
+      if(this.stateList[state] >= 1)
+      {
+        this.stateList[state][0].push( method )
+      }
+    },
+
+    update: function()
+    {
+      if( this.currentPos >= this.currentThreshold )
+      {
+        this.think();
+      }
+    },
+
+    think:function()
+    {
+        //choose random method from actions.
+        //this.stateList[state][0]
+    }
+  }
+
+if (typeof ig !== 'undefined') {
+  // Impact.js:
+  ig.module('plugins.AI').requires().defines(function () {
+    AI = ig.Class.extend({}, ai)
+  })
+} else if (typeof module !== 'undefined' && module.exports) {
+  // CommonJS
+  module.exports = ai
+} else {
+  // Script tag
+  root.ai = ai
+}
