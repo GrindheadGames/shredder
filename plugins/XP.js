@@ -26,123 +26,136 @@
 * OTHER DEALINGS IN THE SOFTWARE.
 */
 
-ig.module('plugins.XP')
-.requires()
-.defines(function () {
-    XP = ig.Class.extend({}
+(function (root) {
 
-      /**
-      * The current XP of the obj.
-      * @property currentXP
-      * @type int
-      **/
-      currentXP:0,
+  var xp = {
 
-      /**
-      * amount of XP needed to level up.
-      * @property levelUpXPThreshold
-      * @type int
-      **/
-      levelUpXPThreshold:0,
+    /**
+    * The current XP of the obj.
+    * @property currentXP
+    * @type int
+    **/
+    currentXP:0,
 
-      /**
-      * Percentage increase of XP needed to level up. IE, 1.05 would increase levelUpXPThreshold up by 5%
-      * @property levelUpXPThresholdIncrease
-      * @type float
-      **/ 
-      levelUpXPThresholdIncrease:0,
+    /**
+    * amount of XP needed to level up.
+    * @property levelUpXPThreshold
+    * @type int
+    **/
+    levelUpXPThreshold:0,
 
-      /**
-      * Current level of the obj.
-      * @property currentLevel
-      * @type int
-      **/
-      currentLevel:0,
+    /**
+    * Percentage increase of XP needed to level up. IE, 1.05 would increase levelUpXPThreshold up by 5%
+    * @property levelUpXPThresholdIncrease
+    * @type float
+    **/
+    levelUpXPThresholdIncrease:0,
 
-      /**
-      * Max level of the obj.
-      * @property maxLevel
-      * @type int
-      **/ 
-      maxLevel:0,
+    /**
+    * Current level of the obj.
+    * @property currentLevel
+    * @type int
+    **/
+    currentLevel:0,
 
-      /**
-      * (optional) A callback method to invoke when the obj levels up.
-      * @property levelUpCallback
-      * @type Function
-      **/ 
-      levelUpCallback: null,
+    /**
+    * Max level of the obj.
+    * @property maxLevel
+    * @type int
+    **/
+    maxLevel:0,
 
-      /**
-       * Set initial values here. Init is called automatically when the class is instantiated.
-       * If you load any saved details, make sure you set them in the constructor. 
-       * 
-       * @class XP
-       * @param {int} currentXP The current XP of the object
-       * @param {int} currentLevel The current Level of the object
-       * @param {int} maxLevel The max permitted Level of the object
-       * @param {int} levelUpXPThresholdIncrease The percentage increase of XP needed to level up. IE, 1.05 would increase XP needed to level up by 5% - note, we may change this be reference a method instead.
-       * @param {int} levelUpXPThreshold The amount of currentXP needed to increase the currentLevel
-       * @param {int} levelUpCallback (optional) a callback method to call when the obj levels up.
-       *
-       * @constructor
-       **/
-      init: function(currentXP, currentLevel, maxLevel, levelUpXPThresholdIncrease, levelUpXPThreshold, levelUpCallback)
+    /**
+    * (optional) A callback method to invoke when the obj levels up.
+    * @property levelUpCallback
+    * @type Function
+    **/
+    levelUpCallback: null,
+
+    /**
+     * Set initial values here. Init is called automatically when the class is instantiated.
+     * If you load any saved details, make sure you set them in the constructor.
+     *
+     * @class XP
+     * @param {int} currentXP The current XP of the object
+     * @param {int} currentLevel The current Level of the object
+     * @param {int} maxLevel The max permitted Level of the object
+     * @param {int} levelUpXPThresholdIncrease The percentage increase of XP needed to level up. IE, 1.05 would increase XP needed to level up by 5% - note, we may change this be reference a method instead.
+     * @param {int} levelUpXPThreshold The amount of currentXP needed to increase the currentLevel
+     * @param {int} levelUpCallback (optional) a callback method to call when the obj levels up.
+     *
+     * @constructor
+     **/
+    init: function(currentXP, currentLevel, maxLevel, levelUpXPThresholdIncrease, levelUpXPThreshold, levelUpCallback)
+    {
+      this.currentXP = currentXP;
+      this.currentLevel = currentLevel;
+      this.maxLevel = maxLevel;
+      this.levelUpXPThresholdIncrease = levelUpXPThresholdIncrease;
+      this.levelUpXPThreshold = levelUpXPThreshold;
+      this.levelUpCallback = levelUpCallback;
+    },
+
+    /**
+    * increase the XP of the obj. Automatically handles levelling up.
+    * @method increaseXP
+    * @param {int} amt The amount of XP to add.
+    **/
+    increaseXP: function( amt )
+    {
+      //increase the current XP amount
+      this.currentXP += amt;
+
+      //if we have more XP than the levelUpThreshold, and we are under the max level limit, increase the level.
+      if( this.currentXP >= this.levelUpXPThreshold )
       {
-        this.currentXP = currentXP;
-        this.currentLevel = currentLevel;
-        this.maxLevel = maxLevel;
-        this.levelUpXPThresholdIncrease = levelUpXPThresholdIncrease;
-        this.levelUpXPThreshold = levelUpXPThreshold;
-        this.levelUpCallback = levelUpCallback;
-      },
-
-      /**
-      * increase the XP of the obj. Automatically handles levelling up.
-      * @method increaseXP
-      * @param {int} amt The amount of XP to add.
-      **/ 
-      increaseXP: function( amt )
-      {
-        //increase the current XP amount
-        this.currentXP += amt;
-
-        //if we have more XP than the levelUpThreshold, and we are under the max level limit, increase the level.
-        if( this.currentXP >= this.levelUpXPThreshold )
-        {
-          this.levelUp();
-        }
-      },
-
-
-      /**
-      * level up the obj.
-      * @method levelUp
-      **/ 
-      levelUp: function()
-      {
-        //eject from this method if we are over the max level limit.
-        if( this.currentLevel >= this.maxLevel )
-        {
-          return;
-        }
-
-        //reset the current Xp, but leave any remaining amount over the threshold.
-        this.currentXP -= this.levelUpXPThreshold;
-        //increase the current level
-        this.currentLevel += 1;
-        //increase the XP threshold amount.
-        this.levelUpXPThreshold *= this.levelUpXPThresholdIncrease;
-
-        //if, after leveling up, we still have more XP than the next threshold, level up again. 
-        if( this.currentXP >= this.levelUpXPThreshold )
-        {
-          this.levelUp();
-        }else if( levelUpCallback != null && levelUpCallback != undefined )
-        {
-          //if we do not have enough XP to level up again, call the levelUpCallback if it has been set.
-          this.levelUpCallback();
-        }
+        this.levelUp();
       }
+    },
+
+
+    /**
+    * level up the obj.
+    * @method levelUp
+    **/
+    levelUp: function()
+    {
+      //eject from this method if we are over the max level limit.
+      if( this.currentLevel >= this.maxLevel )
+      {
+        return;
+      }
+
+      //reset the current Xp, but leave any remaining amount over the threshold.
+      this.currentXP -= this.levelUpXPThreshold;
+      //increase the current level
+      this.currentLevel += 1;
+      //increase the XP threshold amount.
+      this.levelUpXPThreshold *= this.levelUpXPThresholdIncrease;
+
+      //if, after leveling up, we still have more XP than the next threshold, level up again.
+      if( this.currentXP >= this.levelUpXPThreshold )
+      {
+        this.levelUp();
+      }else if( levelUpCallback != null && levelUpCallback != undefined )
+      {
+        //if we do not have enough XP to level up again, call the levelUpCallback if it has been set.
+        this.levelUpCallback();
+      }
+    }
+  }
+
+  if (typeof ig !== 'undefined') {
+    // Impact.js
+    ig.module('plugins.XP').requires().defines(function () {
+      XP = ig.Class.extend({}, xp)
     })
-});
+
+  } else if (typeof module !== 'undefined' && module.exports) {
+    // CommonJS
+    module.exports = xp
+  } else {
+    // Script tag
+    root.xp = xp
+  }
+}(this))
