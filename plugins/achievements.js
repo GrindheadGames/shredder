@@ -1,6 +1,6 @@
 
 (function (root) {
-  'use strict'
+  'use strict';
 
   var achievements =
       { achievementList: []
