@@ -26,38 +26,55 @@
 * OTHER DEALINGS IN THE SOFTWARE.
 */
 
-/**
- * @int seed A value used to seed randomness. Values between 1 - n
- */
-function createRandomSequence(seed) {
+(function (root) {
+  'use strict';
 
-  var self =
-      { currentSeed: seed ? '0.' + seed : Math.random()
-      , get: function() {
-          return self.currentSeed = logisticMap(self.currentSeed)
+  /**
+   * @int seed A value used to seed randomness. Values between 1 - n
+   */
+  var createRandomSequence = function (seed) {
+
+    var self =
+        { currentSeed: seed ? '0.' + seed : Math.random()
+        , get: function() {
+            return self.currentSeed = logisticMap(self.currentSeed)
+          }
         }
-      }
 
-  /**
-   * Randomness is achieved by recursion over the logistic map.
-   *
-   * http://en.wikipedia.org/wiki/Logistic_map#Chaos_and_the_logistic_map
-   */
-  function logisticMap(x) {
-    return 4 * x * (1 - x)
-  }
-
-  /**
-   * The logistic map's randomness is evident after a number of iterations.
-   */
-  function init() {
-    // 99 iterations will provide adequate randomness.
-    for (var i = 0; i < 99; i++) {
-      self.currentSeed = logisticMap(self.currentSeed)
+    /**
+     * Randomness is achieved by recursion over the logistic map.
+     *
+     * http://en.wikipedia.org/wiki/Logistic_map#Chaos_and_the_logistic_map
+     */
+    function logisticMap (x) {
+      return 4 * x * (1 - x)
     }
 
-    return self
+    /**
+     * The logistic map's randomness is evident after a number of iterations.
+     */
+    function init () {
+      // 99 iterations will provide adequate randomness.
+      for (var i = 0; i < 99; i++) {
+        self.currentSeed = logisticMap(self.currentSeed)
+      }
+
+      return self
+    }
+
+    return init()
   }
 
-  return init()
-}
+  if (typeof ig !== 'undefined') {
+    // Impact.js
+    ig.module('plugins.RandomSequence').requires('impact.system').defines(function() {
+      Logger = ig.Class.extend(createRandomSequence)
+    })
+  } else if (typeof module !== 'undefined' && module.exports) {
+    // CommonJS
+    module.exports = createRandomSequence
+  } else {
+    // Script tag
+    root.createRandomSequence = createRandomSequence
+  }
+}(this))
