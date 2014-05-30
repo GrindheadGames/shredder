@@ -1,10 +1,7 @@
-ig.module(
-  'plugins.logger'
-)
-.requires()
-.defines(function () {
+(function (root) {
+  'use strict';
 
-  Logger = ig.Class.extend(
+var logger =
     { rankThreshold: 0
 
     , levels:
@@ -17,13 +14,13 @@ ig.module(
         }
 
     , init: function(rankThreshold) {
-        this.rankThreshold = rankThreshold;
+        this.rankThreshold = rankThreshold
 
-        var levelNames = Object.keys(this.levels);
+        var levelNames = Object.keys(this.levels)
 
         // Create a function for each log level.
         for (var i = 0; i < levelNames.length; i++) {
-          var level = levelNames[i];
+          var level = levelNames[i]
           try {
             // peg the log function onto this class.
             this[level] = this.writeLog.bind(this, level)
@@ -36,17 +33,18 @@ ig.module(
       // This function is a proxy for all log calls.
     , writeLog: function(level) {
 
-        if (!this.shouldLog(level)) return;
+        if (!this.shouldLog(level)) return
+
         // Get the original arguments (except the level).
         var args = Array.prototype.slice.call(arguments, 1)
           , console = window.console
 
         // Call console with arguments.
-        console[level].apply(console, args);
+        console[level].apply(console, args)
       }
 
     , consoleExists: function() {
-        return typeof console == "object" ? true : false;
+        return typeof console === 'object' ? true : false
       }
 
     , logLevelThresholdPassed: function(level) {
@@ -54,8 +52,20 @@ ig.module(
       }
 
     , shouldLog: function(level) {
-        return this.logLevelThresholdPassed(level) && this.consoleExists();
+        return this.logLevelThresholdPassed(level) && this.consoleExists()
       }
-  });
-});
+    }
 
+  if (typeof ig !== 'undefined') {
+    // Impact.js
+    ig.module('plugins.logger').requires().defines(function () {
+      Logger = ig.Class.extend(logger)
+    })
+  } else if (typeof module !== 'undefined' && module.exports) {
+    // CommonJS
+    module.exports = logger
+  } else {
+    // Script tag
+    root.logger = logger
+  }
+}(this))
