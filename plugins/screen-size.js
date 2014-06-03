@@ -7,5 +7,7 @@ module.exports = function(targetDimensions, threshold) {
     , hd = targetDimensions.hd
     , dimensions = sdOrHd(sd, hd, threshold)
 
+  console.log('target dimensions', dimensions)
+
   return safeFitDimensions(dimensions.x, dimensions.y)
 }

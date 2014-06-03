@@ -31,6 +31,7 @@ module.exports = function (sd, hd, threshold) {
   var result =
       { x: baseWidth
       , y: baseHeight
+      , id: layoutId
       }
 
   return result

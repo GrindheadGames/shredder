@@ -1,27 +1,31 @@
 module.exports = function (safeZoneWidth, safeZoneHeight) {
 
-  var w = window.innerWidth //* pixelRatio,
-    , h = window.innerHeight //* pixelRatio
-    , lw
-    , lh
+  var width = window.innerWidth * window.devicePixelRatio
+    , height = window.innerHeight * window.devicePixelRatio
+    , longest = { x: 0, y: 0 }
 
-  if (h > w) {
-    lw = h
-    lh = w
+  if (height > width) {
+    console.log('optimising scale for portrait')
+    longest.x = height
+    longest.y = width
   } else {
-    lw = w
-    lh = h
+    console.log('optimising scale for landscape')
+    longest.x = width
+    longest.y = height
   }
 
-  var aspectRatioDevice = lw / lh
+  var aspectRatioDevice = longest.x / longest.y
     , aspectRatioSafeZone = safeZoneWidth / safeZoneHeight
-    , extraWidth = 0, extraHeight = 0
+    , extraWidth = 0
+    , extraHeight = 0
 
   // have to add game pixels in order to fill the device screen.
   if (aspectRatioSafeZone < aspectRatioDevice) {
     extraWidth = aspectRatioDevice * safeZoneHeight - safeZoneWidth
+    console.log('padding width by', extraWidth)
   } else {
     extraHeight = safeZoneWidth / aspectRatioDevice - safeZoneHeight
+    console.log('padding height by', extraHeight)
   }
 
   var gameSize =
