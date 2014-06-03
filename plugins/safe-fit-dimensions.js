@@ -2,19 +2,19 @@ module.exports = function (safeZoneWidth, safeZoneHeight) {
 
   var width = window.innerWidth * window.devicePixelRatio
     , height = window.innerHeight * window.devicePixelRatio
-    , longest = { x: 0, y: 0 }
+    , landscape = { x: 0, y: 0 }
 
   if (height > width) {
     console.log('optimising scale for portrait')
-    longest.x = height
-    longest.y = width
+    landscape.x = height
+    landscape.y = width
   } else {
     console.log('optimising scale for landscape')
-    longest.x = width
-    longest.y = height
+    landscape.x = width
+    landscape.y = height
   }
 
-  var aspectRatioDevice = longest.x / longest.y
+  var aspectRatioDevice = landscape.x / landscape.y
     , aspectRatioSafeZone = safeZoneWidth / safeZoneHeight
     , extraWidth = 0
     , extraHeight = 0
