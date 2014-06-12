@@ -74,6 +74,10 @@
       , map: function (value, inMin, inMax, outMin, outMax) {
           return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
         }
+
+      , limit: function(number, min, max) {
+          return Math.max(Math.min(number, max), min)
+        }
       }
 
 
